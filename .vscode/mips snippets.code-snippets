@@ -1,20 +1,28 @@
 {
-	"Base": {
+	"MIPS Base": {
 		"prefix": "base",
 		"body": [
 		  ".data",
-		  "\t${1}",
+		  "nl:\t.asciiz\t\"\\n\"",
+		  "",
 		  "",
 		  ".text",
 		  ".globl main",
 		  "",
-		  "main:",
-		  "\t${2}",
+		  "printNewLine:",
+		  "\t# Print a new line",
+		  "\tla\t\\$a0,\tnl\t\t#\\$a0 = nl",
+		  "\tli\t\\$v0,\t4\t\t#\\$v0 = a",
+		  "\tsyscall",
+		  "\tjr \\$ra",
 		  "",
-		  "\tli		\\$v0, 10		        # Exit",
+		  "main:",
+		  "\t${1}",
+		  "exit:	",
+		  "\tli\t\\$v0,\t10\t\t# Exit",
 		  "\tsyscall",
 		  ""
 		],
-		"description": "Base"
+		"description": "MIPS Base"
 	  }
 }
