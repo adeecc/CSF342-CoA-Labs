@@ -1,28 +1,287 @@
 {
-	"MIPS Base": {
+	// Boierplate Code
+	"Base": {
 		"prefix": "base",
 		"body": [
-		  ".data",
-		  "nl:\t.asciiz\t\"\\n\"",
-		  "",
-		  "",
-		  ".text",
-		  ".globl main",
-		  "",
-		  "printNewLine:",
-		  "\t# Print a new line",
-		  "\tla\t\\$a0,\tnl\t\t#\\$a0 = nl",
-		  "\tli\t\\$v0,\t4\t\t#\\$v0 = a",
-		  "\tsyscall",
-		  "\tjr \\$ra",
-		  "",
-		  "main:",
-		  "\t${1}",
-		  "exit:	",
-		  "\tli\t\\$v0,\t10\t\t# Exit",
-		  "\tsyscall",
-		  ""
+			".data",
+			"nl:\t.asciiz\t\"\\n\"",
+			"",
+			"",
+			".text",
+			".globl main",
+			"",
+			"printNewLine:",
+			"\taddi\t\t\\$sp,\t\\$sp,\t-4",
+			"\tsw\t\t\t\\$ra,\t0(\\$sp)",
+			"",
+			"\tli\t\\$a0,\t'\\n'",
+			"\tli\t\\$v0,\t11",
+			"\tsyscall",
+			"",
+			"\tlw\t\t\t\\$ra,\t0(\\$sp)",
+			"\taddi\t\t\\$sp,\t\\$sp, 4",
+			"",
+			"\tjr\t\t\t\\$ra",
+			"",
+			"main:",
+			"\t${1}",
+			"exit:",
+			"\tli\t\\$v0,\t10\t\t# Exit",
+			"\tsyscall",
+			""
 		],
 		"description": "MIPS Base"
-	  }
+	},
+	"Function": {
+		"prefix": "f",
+		"body": [
+			"# FUNCTION ${1:name}",
+			"# ARGS:",
+			"# $a0: ",
+			"${1:name}:",
+			"\taddi\t\t\\$sp,\t\\$sp,\t-20",
+			"\tsw\t\t\t\\$s0,\t16(\\$sp)",
+			"\tsw\t\t\t\\$s1,\t12(\\$sp)",
+			"\tsw\t\t\t\\$s2,\t8(\\$sp)",
+			"\tsw\t\t\t\\$s3,\t4(\\$sp)",
+			"\tsw\t\t\t\\$ra,\t0(\\$sp)",
+
+			"",
+			"\t${2:code}",
+			"",
+			"\tlw\t\t\t\\$s0,\t16(\\$sp)",
+			"\tlw\t\t\t\\$s1,\t12(\\$sp)",
+			"\tlw\t\t\t\\$s2,\t8(\\$sp)",
+			"\tlw\t\t\t\\$s3,\t4(\\$sp)",
+			"\tlw\t\t\t\\$ra,\t0(\\$sp)",
+			"\taddi\t\t\\$sp,\t\\$sp, 20",
+			"",
+			"",
+			"\tjr\t\t\t\\$ra"
+		],
+		"description": ""
+	},
+	// String Stuff
+	"Load and Print String": {
+		"prefix": [
+			"lps",
+			"laps"
+		],
+		"body": [
+			"#\tLoad and Print String",
+			"la\t\t\t\\$a0,\t${1:str}",
+			"li\t\t\t\\$v0,\t4",
+			"syscall"
+		],
+		"description": "Load and Print String"
+	},
+	"Move and Print String": {
+		"prefix": [
+			"mps",
+			"maps"
+		],
+		"body": [
+			"#\tMove and Print String",
+			"move\t\t\\$a0,\t\\$${1:str}",
+			"li\t\t\t\\$v0,\t4",
+			"syscall"
+		],
+		"description": "Move and Print String"
+	},
+	"Load and Read String": {
+		"prefix": [
+			"lrs",
+			"lars"
+		],
+		"body": [
+			"#\tLoad and Read String",
+			"la\t\t\t\\$a0,\t${1:str}",
+			"li\t\t\t\\$a1,\t${2:size}",
+			"li\t\t\t\\$v0,\t8",
+			"syscall",
+			"move\t\t\\$${3:var},\t\\$a0"
+		],
+		"description": "Load and Read String"
+	},
+	// Integer Stuff
+	"Load and Print Int": {
+		"prefix": [
+			"lpw",
+			"lapw"
+		],
+		"body": [
+			"#\tLoad and Print Int",
+			"lw\t\t\t\\$a0,\t${1:int}",
+			"li\t\t\t\\$v0,\t1",
+			"syscall"
+		],
+		"description": "Load and Print Int"
+	},
+	"Move and Print Int": {
+		"prefix": [
+			"mpw",
+			"mapw"
+		],
+		"body": [
+			"#\tMove and Print Int",
+			"move\t\t\\$a0,\t\\$${1:int}",
+			"li\t\t\t\\$v0,\t1",
+			"syscall"
+		],
+		"description": "Move and Print Int"
+	},
+	"Read Int": {
+		"prefix": [
+			"rw",
+			"ri"
+		],
+		"body": [
+			"#\tRead Int",
+			"li\t\t\t\\$v0,\t5",
+			"syscall",
+			"move\t\t\\$${3:var},\t\\$v0"
+		],
+		"description": "Read Int and Move"
+	},
+	// Float Stuff
+	"Load and Print Float": {
+		"prefix": [
+			"lpf",
+			"lapf"
+		],
+		"body": [
+			"#\tLoad and Print Float",
+			"l.s\t\t\t\\$f12,\t${1:float}",
+			"li\t\t\t\\$v0,\t2",
+			"syscall"
+		],
+		"description": "Load and Print Float"
+	},
+	"Move and Print Float": {
+		"prefix": [
+			"mpf",
+			"mapf"
+		],
+		"body": [
+			"#\tMove and Print Float",
+			"mov.s\t\t\\$f12,\t\\$${1:float}",
+			"li\t\t\t\\$v0,\t2",
+			"syscall"
+		],
+		"description": "Move and Print Float"
+	},
+	"Read Float": {
+		"prefix": [
+			"rf",
+		],
+		"body": [
+			"#\tRead Float",
+			"li\t\t\t\\$v0,\t6",
+			"syscall",
+			"mov.s\t\t\\$${3:var},\t\\$f0"
+		],
+		"description": "Read Float and Move"
+	},
+	// Double Stuff
+	"Load and Print Double": {
+		"prefix": [
+			"lpd",
+			"lapd"
+		],
+		"body": [
+			"#\tLoad and Print Double",
+			"l.d\t\t\t\\$f12,\t${1:Double}",
+			"li\t\t\t\\$v0,\t3",
+			"syscall"
+		],
+		"description": "Load and Print Double"
+	},
+	"Move and Print Double": {
+		"prefix": [
+			"mpd",
+			"mapd"
+		],
+		"body": [
+			"#\tMove and Print Double",
+			"mov.d\t\t\\$f12,\t\\$${1:Double}",
+			"li\t\t\t\\$v0,\t3",
+			"syscall"
+		],
+		"description": "Move and Print Double"
+	},
+	"Read Double": {
+		"prefix": [
+			"rd"
+		],
+		"body": [
+			"#\tRead Double",
+			"li\t\t\t\\$v0,\t7",
+			"syscall",
+			"mov.d\t\t\\$${3:var},\t\\$f0"
+		],
+		"description": "Read Double and Move"
+	},
+	// Loops
+	"While Loop": {
+		"prefix": [
+			"wlr",
+			"wl",
+			"while"
+		],
+		"body": [
+			"${1:name}__loop_condition:",
+			"\t# While (\\$s1 < \\$s2) {",
+			"\tslt\t\t\t\\$t0, \\$s1, \\$s2",
+			"\tbeq\t\t\t\\$t0, \\$zero, ${1:name}__loop_end",
+			"${1:name}__loop_body:",
+			"\t# Do Stuff",
+			"",
+			"\tj\t${1:name}__loop_predicate",
+			"${1:name}__loop_end:",
+			"\t# } ",
+			"\tnop "
+		],
+		"description": "While Loop "
+	},
+	"For Loop": {
+		"prefix": [
+			"fl",
+			"for"
+		],
+		"body": [
+			"${1:name}__loop_init:",
+			"\tli\t\t\t$$s0,\t${2:init_imm_value} # $$s0 = ${2:init_imm_value}; ",
+			"${1:name}__loop_condition:",
+			"\tbge\t\t\t$$s0,\t${3:term_value},\t${1:name}__loop_end\t\t#\tbreak if $s0 >= ${3:term_value}",
+			"",
+			"${1:name}__loop_body:",
+			"\t# Do Stuff",
+			"",
+			"\tadd\t\t\t$$s0,\t$$s0,\t1\t\t#\t$$s0++",
+			"\tj ${1:name}__loop_condition",
+			"${1:name}__loop_end:",
+			"\tnop"
+		],
+		"description": "For Loop"
+	},
+	// TODO!!!!
+	"Loop Over String": {
+		"prefix": [
+			"los",
+		],
+		"body": [
+			"${1:name}__loop_init:",
+			"\tli\t\t\t$$s0,\t${2:init_imm_value} # $$s0 = init_imm_value; ",
+			"${1:name}__loop_condition:",
+			"\tbge\t\t\t$$s0,\t${3:term_value},\t${1:name}__loop_end\t\t#\tbreak if $s0 >= term_value",
+			"",
+			"${1:name}__loop_body:",
+			"\t# Do Stuff",
+			"",
+			"\tadd\t\t\t$$s0,\t$$s0,\t1\t\t#\t$$s0++",
+			"${1:name}__loop_end:",
+			"\tnop"
+		],
+		"description": "Loop Over String"
+	}
 }
