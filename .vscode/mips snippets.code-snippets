@@ -10,19 +10,6 @@
 			".text",
 			".globl main",
 			"",
-			"printNewLine:",
-			"\taddi\t\t\\$sp,\t\\$sp,\t-4",
-			"\tsw\t\t\t\\$ra,\t0(\\$sp)",
-			"",
-			"\tla\t\\$a0,\tnl",
-			"\tli\t\\$v0,\t4",
-			"\tsyscall",
-			"",
-			"\tlw\t\t\t\\$ra,\t0(\\$sp)",
-			"\taddi\t\t\\$sp,\t\\$sp, 4",
-			"",
-			"\tjr\t\t\t\\$ra",
-			"",
 			"main:",
 			"\t${1}",
 			"exit:",
@@ -60,6 +47,18 @@
 			"\tjr\t\t\t\\$ra"
 		],
 		"description": ""
+	},
+	"Print New Line": {
+		"prefix": [
+			"nl",
+			"lb"
+		],
+		"body": [
+			"la\t\t\t\\$a0, nl",
+			"li\t\t\t\\$v0, 4",
+			"syscall"
+		],
+		"description": "Print NewLine"
 	},
 	// String Stuff
 	"Load and Print String": {
@@ -107,7 +106,8 @@
 	"Load and Print Int": {
 		"prefix": [
 			"lpw",
-			"lapw"
+			"lapw",
+			"pi"
 		],
 		"body": [
 			"#\tLoad and Print Int",
